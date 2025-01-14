@@ -13,7 +13,7 @@
   "license": "ISC",
   "author": "Livan H",
   "type": "module",
-  "main": "demo.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }
