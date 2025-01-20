@@ -1,19 +1,24 @@
-import http from 'http';
-import fs from 'fs';
-http.createServer((req,res) => {
-    const path = req.url.toLowerCase();
-    switch(path) {
-        case '/':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('Homepage');
-            break;
-        case '/about':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('About page');
-            break;
-        default:
-            res.writeHead(404, {'Content-Type': 'text/plain'});
-            res.end('Not found');
-            break;
-    }
-}).listen(process.env.PORT || 3000);
+import express from 'express';
+import { getAll, getItem } from './data.js';
+
+const app = express();
+app.set('view engine', 'ejs');
+
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+  const albums = getAll(); // Use the getAll function to fetch all albums
+  res.render('home', { albums });
+});
+
+app.get('/details/:title', (req, res) => {
+  const album = getItem(req.params.title);
+  if (album) {
+    res.render('details', { album });
+  } else {
+    res.status(404).send('Album not found');
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
